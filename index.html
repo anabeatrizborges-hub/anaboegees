@@ -1,76 +1,96 @@
-def calcular_insumos_e_safra(cultura, area_hectares):
-    # Dados fictícios baseados em médias gerais de mercado
-    culturas_dados = {
-        "soja": {"produtividade_media": 3.6, "fertilizante_por_ha": 350},  # toneladas por ha / kg por ha
-        "milho": {"produtividade_media": 6.5, "fertilizante_por_ha": 400},
-        "algodao": {"produtividade_media": 4.1, "fertilizante_por_ha": 450}
-    }
-    
-    cultura = cultura.lower().strip()
-    
-    if cultura not in culturas_dados:
-        return f"Cultura '{cultura}' não cadastrada no sistema."
-    
-    dados = cultures_dados[cultura]
-    
-    # Cálculos
-    producao_estimada = area_hectares * dados["produtividade_media"]
-    fertilizante_total = (area_hectares * dados["fertilizante_por_ha"]) / 1000 # convertido para toneladas
-    
-    return {
-        "Cultura": cultura.capitalize(),
-        "Área Analisada (ha)": area_hectares,
-        "Estimativa de Produção (Toneladas)": round(producao_estimada, 2),
-        "Necessidade de Fertilizante (Toneladas)": round(fertilizante_total, 2)
-    }
+import time
 
-# --- Demonstração de Uso ---
-if __name__ == "__main__":
-    print("--- SISTEMA AGRO FORTE: ANÁLISE DE SAFRA ---")
-    resultado = calcular_insumos_e_safra(cultura="soja", area_hectares=150)
+# Códigos de cor ANSI para o terminal (foco na cor verde)
+VERDE_BRILHANTE = '\033[92m'
+VERDE_ESCURO = '\033[32m'
+RESET = '\033[0m'
+NEGRITO = '\033[1m'
+AMARELO = '\033[93m'
+
+def exibir_painel():
+    print(f"{VERDE_BRILHANTE}{NEGRITO}" + "="*60)
+    print("🚜 PAINEL AGRO FORTE: FUTURO SUSTENTÁVEL 🌿")
+    print("="*60 + f"{RESET}")
+    time.sleep(0.5)
+
+def avaliar_fazenda(nome_propriedade, area_total, area_preservacao, uso_pesticidas):
+    exibir_painel()
     
-    if isinstance(resultado, dict):
-        for chave, valor in resultado.items():
-            print(f"{chave}: {valor}")
+    # Cálculo do percentual de área preservada
+    percentual_preservado = (area_preservacao / area_total) * 100
+    
+    print(f"{NEGRITO}Propriedade:{RESET} {nome_propriedade}")
+    print(f"{NEGRITO}Área Total:{RESET} {area_total} hectares")
+    print(f"{NEGRITO}Área de Preservação Ambiental (APP):{RESET} {area_preservacao} hectares ({percentual_preservado:.1f}%)")
+    print(f"{NEGRITO}Uso de Defensivos Químicos:{RESET} {uso_pesticidas}\n")
+    
+    print(f"{VERDE_ESCURO}⏳ Processando indicadores ESG (Ambientais e Sociais)...{RESET}")
+    time.sleep(1.5)
+    
+    print(f"\n{VERDE_BRILHANTE}{NEGRITO}📊 RELATÓRIO DE SUSTENTABILIDADE{RESET}")
+    print(f"{VERDE_ESCURO}" + "─"*60 + f"{RESET}")
+    
+    # Validação do Selo Verde
+    if percentual_preservado >= 20 and uso_pesticidas.lower() in ["baixo", "nenhum"]:
+        print(f"{VERDE_BRILHANTE}🟢 STATUS: EXCELENTE - PROPRIEDADE CERTIFICADA COM SELO VERDE{RESET}")
+        print(f"{VERDE_BRILHANTE}🌿 A fazenda cumpre o Código Florestal e adota manejo biológico rigoroso.{RESET}")
+    elif percentual_preservado >= 20:
+        print(f"{AMARELO}🟡 STATUS: REGULAR - ATENÇÃO AO MANEJO{RESET}")
+        print(f"{AMARELO}💡 Recomendação: Reduzir defensivos químicos e migrar para o controle biológico.{RESET}")
     else:
-        print(resultado)
-        import random
-import time
-
-def monitorar_umidade_solo(limite_critico=40):
-    """
-    Simula o monitoramento de umidade do solo para pivôs de irrigação.
-    """
-    print("Iniciando monitoramento dos sensores Agro Forte...")
-    print(f"Alerta configurado para umidade abaixo de {limite_critico}%\n")
-    
-    # Simula 5 leituras de sensores em tempo real
-    for leitura in range(1, 6):
-        umidade_atual = random.randint(30, 75)
-        status = "ESTÁVEL" if umidade_atual >= limite_critico else "CRÍTICO - ATIVAR IRRIGAÇÃO"
+        print(f"\033[91m🔴 STATUS: ALERTA - READEQUAÇÃO NECESSÁRIA{RESET}")
+        print(f"💡 Recomendação: Ampliar a cobertura vegetal e criar corredores ecológicos.")
         
-        print(f"[Leitura #{leitura}] Umidade do Solo: {umidade_atual}% | Status: {status}")
-        time.sleep(1) # Simula o intervalo de tempo entre checagens
+    print(f"{VERDE_ESCURO}" + "─"*60 + f"{RESET}")
+    print(f"\n{VERDE_BRILHANTE}✅ Monitoramento Agro Forte concluído com sucesso!{RESET}\n")
 
 if __name__ == "__main__":
-    monitorar_umidade_solo()
-    import random
-import time
+    # Exemplo de uso simulando uma fazenda altamente sustentável
+    avaliar_fazenda(
+        nome_propriedade="Fazenda Vale Verde",
+        area_total=500,
+        area_preservacao=125, # 25% de área preservada
+        uso_pesticidas="baixo"
+    )
+    # 🌱 Agro Forte: Futuro Sustentável
 
-def monitorar_umidade_solo(limite_critico=40):
-    """
-    Simula o monitoramento de umidade do solo para pivôs de irrigação.
-    """
-    print("Iniciando monitoramento dos sensores Agro Forte...")
-    print(f"Alerta configurado para umidade abaixo de {limite_critico}%\n")
-    
-    # Simula 5 leituras de sensores em tempo real
-    for leitura in range(1, 6):
-        umidade_atual = random.randint(30, 75)
-        status = "ESTÁVEL" if umidade_atual >= limite_critico else "CRÍTICO - ATIVAR IRRIGAÇÃO"
-        
-        print(f"[Leitura #{leitura}] Umidade do Solo: {umidade_atual}% | Status: {status}")
-        time.sleep(1) # Simula o intervalo de tempo entre checagens
+![Status](https://img.shields.io/badge/Status-Sustent%C3%A1vel-brightgreen?style=for-the-badge)
+![Tecnologia](https://img.shields.io/badge/Agrotech-Python-green?style=for-the-badge&logo=python)
+![Foco](https://img.shields.io/badge/ESG-Meio%20Ambiente-darkgreen?style=for-the-badge)
 
-if __name__ == "__main__":
-    monitorar_umidade_solo()
+O projeto **Agro Forte: Futuro Sustentável** é uma plataforma conceitual voltada para a gestão de propriedades agrícolas modernas que buscam maximizar a produtividade sem comprometer os recursos naturais. Alinhando tecnologia de dados com as diretrizes globais de ESG, nosso objetivo é provar que a força do campo está na sua capacidade de se renovar.
+
+---
+
+## 🟢 Pilares do Projeto
+
+* **🟩 Conservação do Solo:** Incentivo a técnicas como o plantio direto e a rotação de culturas para evitar a erosão.
+* **💧 Gestão Hídrica Inteligente:** Monitoramento de pivôs centrais e irrigação por gotejamento para reduzir o desperdício de água.
+* **🌲 Créditos de Carbono:** Algoritmos para estimar o sequestro de carbono através de áreas de floresta nativa preservadas dentro das fazendas.
+
+---
+
+## 📊 Matriz de Indicadores Verdes (ESG no Campo)
+
+A tabela abaixo serve como métrica de referência para o sistema avaliar o impacto ambiental de cada lavoura cadastrada:
+
+| Cultura Comercial | Conservação do Solo | Emissão de $CO_2$ | Consumo de Água | Classificação Verde |
+| :--- | :---: | :---: | :---: | :--- |
+| **Sistemas Agroflorestais** | Alta | Negativa (Sequestra) | Baixo | 🟢 Excelente / Regenerativo |
+| **Soja (Plantio Direto)** | Média | Neutra | Moderado | 🟢 Sustentável |
+| **Milho (Consorciado)** | Média | Baixa | Moderado | 🟢 Sustentável |
+
+---
+
+## 🛠️ Como Executar a Ferramenta de Monitoramento
+
+Para rodar o painel interativo e ver as análises coloridas no seu terminal, siga os passos abaixo:
+
+### Pré-requisitos
+Ter o Python 3 instalado em seu computador.
+
+### Passo a Passo
+
+1. Copie os arquivos para a sua máquina:
+```bash
+git clone [https://github.com/seu-usuario/agro-forte-sustentavel.git](https://github.com/seu-usuario/agro-forte-sustentavel.git)
