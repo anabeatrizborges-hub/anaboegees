@@ -1,96 +1,121 @@
-import time
+import tkinter as tk
+from tkinter import messagebox
 
-# Códigos de cor ANSI para o terminal (foco na cor verde)
-VERDE_BRILHANTE = '\033[92m'
-VERDE_ESCURO = '\033[32m'
-RESET = '\033[0m'
-NEGRITO = '\033[1m'
-AMARELO = '\033[93m'
+# --- CONFIGURAÇÕES DE CORES (PALETA VERDE) ---
+VERDE_FONDO = "#1e3d2f"       # Verde escuro para o fundo
+VERDE_CARD = "#2d5a44"        # Verde médio para os blocos
+VERDE_BOTAO = "#4caf50"       # Verde brilhante para botões
+BRANCO = "#ffffff"
+TEXTO_VERDE = "#81c784"
 
-def exibir_painel():
-    print(f"{VERDE_BRILHANTE}{NEGRITO}" + "="*60)
-    print("🚜 PAINEL AGRO FORTE: FUTURO SUSTENTÁVEL 🌿")
-    print("="*60 + f"{RESET}")
-    time.sleep(0.5)
-
-def avaliar_fazenda(nome_propriedade, area_total, area_preservacao, uso_pesticidas):
-    exibir_painel()
-    
-    # Cálculo do percentual de área preservada
-    percentual_preservado = (area_preservacao / area_total) * 100
-    
-    print(f"{NEGRITO}Propriedade:{RESET} {nome_propriedade}")
-    print(f"{NEGRITO}Área Total:{RESET} {area_total} hectares")
-    print(f"{NEGRITO}Área de Preservação Ambiental (APP):{RESET} {area_preservacao} hectares ({percentual_preservado:.1f}%)")
-    print(f"{NEGRITO}Uso de Defensivos Químicos:{RESET} {uso_pesticidas}\n")
-    
-    print(f"{VERDE_ESCURO}⏳ Processando indicadores ESG (Ambientais e Sociais)...{RESET}")
-    time.sleep(1.5)
-    
-    print(f"\n{VERDE_BRILHANTE}{NEGRITO}📊 RELATÓRIO DE SUSTENTABILIDADE{RESET}")
-    print(f"{VERDE_ESCURO}" + "─"*60 + f"{RESET}")
-    
-    # Validação do Selo Verde
-    if percentual_preservado >= 20 and uso_pesticidas.lower() in ["baixo", "nenhum"]:
-        print(f"{VERDE_BRILHANTE}🟢 STATUS: EXCELENTE - PROPRIEDADE CERTIFICADA COM SELO VERDE{RESET}")
-        print(f"{VERDE_BRILHANTE}🌿 A fazenda cumpre o Código Florestal e adota manejo biológico rigoroso.{RESET}")
-    elif percentual_preservado >= 20:
-        print(f"{AMARELO}🟡 STATUS: REGULAR - ATENÇÃO AO MANEJO{RESET}")
-        print(f"{AMARELO}💡 Recomendação: Reduzir defensivos químicos e migrar para o controle biológico.{RESET}")
-    else:
-        print(f"\033[91m🔴 STATUS: ALERTA - READEQUAÇÃO NECESSÁRIA{RESET}")
-        print(f"💡 Recomendação: Ampliar a cobertura vegetal e criar corredores ecológicos.")
+def calcular_sustentabilidade():
+    try:
+        total = float(entry_total.get())
+        app = float(entry_app.get())
+        pesticidas = var_pesticidas.get()
         
-    print(f"{VERDE_ESCURO}" + "─"*60 + f"{RESET}")
-    print(f"\n{VERDE_BRILHANTE}✅ Monitoramento Agro Forte concluído com sucesso!{RESET}\n")
+        if app > total:
+            messagebox.showerror("Erro", "A área de APP não pode ser maior que a área total!")
+            return
+            
+        # Cálculo do percentual de preservação
+        pct_preservacao = (app / total) * 100
+        
+        # Lógica de pontuação para o Engenheiro Agrônomo
+        pontos = 0
+        if pct_preservacao >= 20: pontos += 50
+        elif pct_preservacao >= 10: pontos += 25
+        
+        if pesticidas == "Baixo/Biológico": pontos += 50
+        elif pesticidas == "Moderado": pontos += 25
+        
+        # Resultado
+        resultado_txt = f"Área Preservada: {pct_preservacao:.1f}%\n"
+        if pontos >= 80:
+            resultado_txt += "Selo: 🟢 Forte & Sustentável (Excelente)"
+        elif pontos >= 50:
+            resultado_txt += "Selo: 🟡 Em Transição Sustentável"
+        else:
+            resultado_txt += "Selo: 🔴 Alerta Necessário (Ajustar Manejo)"
+            
+        lbl_resultado.config(text=resultado_txt, fg=BRANCO)
+        
+    except ValueError:
+        messagebox.showerror("Erro de Digitação", "Por favor, insira números válidos para as áreas.")
 
-if __name__ == "__main__":
-    # Exemplo de uso simulando uma fazenda altamente sustentável
-    avaliar_fazenda(
-        nome_propriedade="Fazenda Vale Verde",
-        area_total=500,
-        area_preservacao=125, # 25% de área preservada
-        uso_pesticidas="baixo"
-    )
-    # 🌱 Agro Forte: Futuro Sustentável
+# --- CONSTRUÇÃO DA INTERFACE VISUAL ---
+root = tk.Tk()
+root.title("Agrinho: Agro Forte, Futuro Sustentável")
+root.geometry("450x550")
+root.configure(bg=VERDE_FONDO)
 
-![Status](https://img.shields.io/badge/Status-Sustent%C3%A1vel-brightgreen?style=for-the-badge)
-![Tecnologia](https://img.shields.io/badge/Agrotech-Python-green?style=for-the-badge&logo=python)
-![Foco](https://img.shields.io/badge/ESG-Meio%20Ambiente-darkgreen?style=for-the-badge)
+# Cabeçalho
+lbl_titulo = tk.Label(root, text="PAINEL DO AGRÔNOMO", font=("Arial", 16, "bold"), bg=VERDE_FONDO, fg=TEXTO_VERDE)
+lbl_titulo.pack(pady=20)
 
-O projeto **Agro Forte: Futuro Sustentável** é uma plataforma conceitual voltada para a gestão de propriedades agrícolas modernas que buscam maximizar a produtividade sem comprometer os recursos naturais. Alinhando tecnologia de dados com as diretrizes globais de ESG, nosso objetivo é provar que a força do campo está na sua capacidade de se renovar.
+# Card de Entrada (Área Total)
+frame_dados = tk.Frame(root, bg=VERDE_CARD, bd=2, relief="groove")
+frame_dados.pack(pady=10, padx=20, fill="both", expand=True)
+
+tk.Label(frame_dados, text="Área Total da Propriedade (ha):", bg=VERDE_CARD, fg=BRANCO, font=("Arial", 11)).pack(pady=5)
+entry_total = tk.Entry(frame_dados, font=("Arial", 11), justify="center")
+entry_total.pack(pady=5)
+
+# Card de Entrada (APP)
+tk.Label(frame_dados, text="Área de Preservação / APP (ha):", bg=VERDE_CARD, fg=BRANCO, font=("Arial", 11)).pack(pady=5)
+entry_app = tk.Entry(frame_dados, font=("Arial", 11), justify="center")
+entry_app.pack(pady=5)
+
+# Dropdown de Pesticidas
+tk.Label(frame_dados, text="Nível de Defensivos Químicos:", bg=VERDE_CARD, fg=BRANCO, font=("Arial", 11)).pack(pady=5)
+var_pesticidas = tk.StringVar(value="Baixo/Biológico")
+opt_pesticidas = tk.OptionMenu(frame_dados, var_pesticidas, "Baixo/Biológico", "Moderado", "Alto/Intensivo")
+opt_pesticidas.config(font=("Arial", 10), bg=VERDE_FONDO, fg=BRANCO)
+opt_pesticidas.pack(pady=5)
+
+# Botão de Ação
+btn_analisar = tk.Button(root, text="GERAR DIAGNÓSTICO", font=("Arial", 11, "bold"), bg=VERDE_BOTAO, fg=BRANCO, command=calcular_sustentabilidade)
+btn_analisar.pack(pady=20)
+
+# Painel de Resultado
+lbl_resultado = tk.Label(root, text="Insira os dados acima para calcular.", font=("Arial", 12, "bold"), bg=VERDE_FONDO, fg=TEXTO_VERDE, justify="center")
+lbl_resultado.pack(pady=10)
+
+root.mainloop()
+# 🌾 Agrinho - Agro Forte, Futuro Sustentável
+
+![Status](https://img.shields.io/badge/Projeto-Agrinho-green?style=for-the-badge)
+![Foco](https://img.shields.io/badge/Publico-Agr%C3%B4nomos-brightgreen?style=for-the-badge)
+![Interface](https://img.shields.io/badge/Layout-Verde%20Sustent%C3%A1vel-darkgreen?style=for-the-badge)
+
+Este repositório foi desenvolvido especialmente para o **Concurso Agrinho**, trazendo uma ferramenta em software voltada para auxiliar **Engenheiros Agrônomos** na tomada de decisões ecológicas e produtivas em propriedades rurais.
 
 ---
 
-## 🟢 Pilares do Projeto
+## 🟢 Objetivo do Projeto
 
-* **🟩 Conservação do Solo:** Incentivo a técnicas como o plantio direto e a rotação de culturas para evitar a erosão.
-* **💧 Gestão Hídrica Inteligente:** Monitoramento de pivôs centrais e irrigação por gotejamento para reduzir o desperdício de água.
-* **🌲 Créditos de Carbono:** Algoritmos para estimar o sequestro de carbono através de áreas de floresta nativa preservadas dentro das fazendas.
+Capacitar o profissional do campo com um software rápido que analisa a conformidade ambiental e o equilíbrio ecológico das fazendas, promovendo o conceito de que o **Agro Forte** caminha lado a lado com um **Futuro Sustentável**.
 
----
+## 🛠️ Funcionalidades do Software
 
-## 📊 Matriz de Indicadores Verdes (ESG no Campo)
-
-A tabela abaixo serve como métrica de referência para o sistema avaliar o impacto ambiental de cada lavoura cadastrada:
-
-| Cultura Comercial | Conservação do Solo | Emissão de $CO_2$ | Consumo de Água | Classificação Verde |
-| :--- | :---: | :---: | :---: | :--- |
-| **Sistemas Agroflorestais** | Alta | Negativa (Sequestra) | Baixo | 🟢 Excelente / Regenerativo |
-| **Soja (Plantio Direto)** | Média | Neutra | Moderado | 🟢 Sustentável |
-| **Milho (Consorciado)** | Média | Baixa | Moderado | 🟢 Sustentável |
+* **Calculadora de APP:** Medição instantânea do percentual de área preservada em relação ao tamanho total da fazenda.
+* **Mapeamento de Impacto:** Classificação com bandeiras coloridas baseadas no uso de defensivos e biológicos.
+* **Interface Responsiva:** Design baseado em paletas de cores verdes para identificação visual imediata com o ecossistema agrícola.
 
 ---
 
-## 🛠️ Como Executar a Ferramenta de Monitoramento
+## 📊 Critérios de Avaliação Técnica (Matriz ESG)
 
-Para rodar o painel interativo e ver as análises coloridas no seu terminal, siga os passos abaixo:
+| Porcentagem de APP | Uso de Insumos | Classificação do Sistema |
+| :--- | :---: | :--- |
+| **Acima de 20%** | Baixo / Biológico | 🟢 Agro Forte & Sustentável |
+| **Entre 10% e 20%** | Moderado | 🟡 Transição Ecológica |
+| **Abaixo de 10%** | Alto | 🔴 Adequação Urgente Recomendada |
 
-### Pré-requisitos
-Ter o Python 3 instalado em seu computador.
+---
 
-### Passo a Passo
+## 🚀 Como Executar no seu Computador
 
-1. Copie os arquivos para a sua máquina:
+1. Baixe os arquivos do repositório ou clone usando o terminal:
 ```bash
-git clone [https://github.com/seu-usuario/agro-forte-sustentavel.git](https://github.com/seu-usuario/agro-forte-sustentavel.git)
+git clone [https://github.com/seu-usuario/agrinho-agroforte.git](https://github.com/seu-usuario/agrinho-agroforte.git)
