@@ -1,0 +1,76 @@
+def calcular_insumos_e_safra(cultura, area_hectares):
+    # Dados fictícios baseados em médias gerais de mercado
+    culturas_dados = {
+        "soja": {"produtividade_media": 3.6, "fertilizante_por_ha": 350},  # toneladas por ha / kg por ha
+        "milho": {"produtividade_media": 6.5, "fertilizante_por_ha": 400},
+        "algodao": {"produtividade_media": 4.1, "fertilizante_por_ha": 450}
+    }
+    
+    cultura = cultura.lower().strip()
+    
+    if cultura not in culturas_dados:
+        return f"Cultura '{cultura}' não cadastrada no sistema."
+    
+    dados = cultures_dados[cultura]
+    
+    # Cálculos
+    producao_estimada = area_hectares * dados["produtividade_media"]
+    fertilizante_total = (area_hectares * dados["fertilizante_por_ha"]) / 1000 # convertido para toneladas
+    
+    return {
+        "Cultura": cultura.capitalize(),
+        "Área Analisada (ha)": area_hectares,
+        "Estimativa de Produção (Toneladas)": round(producao_estimada, 2),
+        "Necessidade de Fertilizante (Toneladas)": round(fertilizante_total, 2)
+    }
+
+# --- Demonstração de Uso ---
+if __name__ == "__main__":
+    print("--- SISTEMA AGRO FORTE: ANÁLISE DE SAFRA ---")
+    resultado = calcular_insumos_e_safra(cultura="soja", area_hectares=150)
+    
+    if isinstance(resultado, dict):
+        for chave, valor in resultado.items():
+            print(f"{chave}: {valor}")
+    else:
+        print(resultado)
+        import random
+import time
+
+def monitorar_umidade_solo(limite_critico=40):
+    """
+    Simula o monitoramento de umidade do solo para pivôs de irrigação.
+    """
+    print("Iniciando monitoramento dos sensores Agro Forte...")
+    print(f"Alerta configurado para umidade abaixo de {limite_critico}%\n")
+    
+    # Simula 5 leituras de sensores em tempo real
+    for leitura in range(1, 6):
+        umidade_atual = random.randint(30, 75)
+        status = "ESTÁVEL" if umidade_atual >= limite_critico else "CRÍTICO - ATIVAR IRRIGAÇÃO"
+        
+        print(f"[Leitura #{leitura}] Umidade do Solo: {umidade_atual}% | Status: {status}")
+        time.sleep(1) # Simula o intervalo de tempo entre checagens
+
+if __name__ == "__main__":
+    monitorar_umidade_solo()
+    import random
+import time
+
+def monitorar_umidade_solo(limite_critico=40):
+    """
+    Simula o monitoramento de umidade do solo para pivôs de irrigação.
+    """
+    print("Iniciando monitoramento dos sensores Agro Forte...")
+    print(f"Alerta configurado para umidade abaixo de {limite_critico}%\n")
+    
+    # Simula 5 leituras de sensores em tempo real
+    for leitura in range(1, 6):
+        umidade_atual = random.randint(30, 75)
+        status = "ESTÁVEL" if umidade_atual >= limite_critico else "CRÍTICO - ATIVAR IRRIGAÇÃO"
+        
+        print(f"[Leitura #{leitura}] Umidade do Solo: {umidade_atual}% | Status: {status}")
+        time.sleep(1) # Simula o intervalo de tempo entre checagens
+
+if __name__ == "__main__":
+    monitorar_umidade_solo()
